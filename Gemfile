@@ -15,6 +15,11 @@ group :heroku do
   gem 'netrc'
 end
 
+group :datapipeline do
+  gem 'aws-sdk', '>= 2.0.18.pre'
+  gem 'json'
+end
+
 group :openshift do
   gem 'rhc'
   gem 'httpclient'

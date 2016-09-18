@@ -11,6 +11,7 @@ Dpl supports the following providers:
 * [AppFog](#appfog)
 * [Atlas by HashiCorp](#atlas)
 * [AWS CodeDeploy](#aws-codedeploy)
+* [AWS Datapipeline](#aws-datapipeline)
 * [AWS Elastic Beanstalk](#elastic-beanstalk)
 * [AWS OpsWorks](#opsworks)
 * [Azure Web Apps](#azure-web-apps)
@@ -777,6 +778,26 @@ and your testers can start testing your app.
 #### Examples:
 
     dpl --provider=codedeploy --access-key-id=<aws access key> --secret_access_key=<aws secret access key> --application=<application name> --deployment_group=<deployment group> --revision_type=<s3/github> --commit_id=<commit ID> --repository=<repo name> --region=<AWS availability zone> --wait-until-deployed=<true>
+
+
+### AWS Datapipeline:
+
+#### Options:
+
+* **access-key-id**: AWS Access Key.
+* **secret_access_key**: AWS Secret Access Key.
+* **pipeline_name**: The name of the pipeline.
+* **pipeline_definition_file**: The JSON pipeline definition file.
+* **region**: AWS Availability Zone.
+
+#### Environment variables:
+
+ * **AWS_ACCESS_KEY_ID**: AWS Access Key ID. Used if the `access-key-id` option is omitted.
+ * **AWS_SECRET_ACCESS_KEY**: AWS Secret Key. Used if the `secret-access-key` option is omitted.
+
+#### Examples:
+
+    dpl --provider=datapipeline --access-key-id=<aws access key> --secret_access_key=<aws secret access key> --region=<AWS availability zone> --pipeline_name=<pipeline name> --pipeline_definition_file=<pipeline definition file>
 
 ### ExoScale:
 
