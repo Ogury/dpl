@@ -64,7 +64,6 @@ module DPL
 
       def push_app
         log "Deploying pipeline #{pipeline_name} with pipeline definition @ #{pipeline_definition_file}"
-        log "options: #{options}"
 
         pipelines = datapipeline.list_pipelines.pipeline_id_list.select { |x| x.name == pipeline_name }
 
@@ -79,13 +78,16 @@ module DPL
           })
         end
 
+        log "Processing tags..."
+        tags = pipeline_tags.split(',').map { |x| { :key => x.split('=')[0], :value => x.split('=')[1] }}
+
         log "Creating pipeline #{pipeline_name}"
-        log "with tags #{pipeline_tags}"
+
         response = datapipeline.create_pipeline({
           name: pipeline_name,
           unique_id: pipeline_name,
           description: pipeline_description,
-          tags: pipeline_tags
+          tags: tags
         })
         pipeline_id = response.pipeline_id
         log "Pipeline #{pipeline_id} created"
