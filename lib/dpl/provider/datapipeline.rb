@@ -34,6 +34,14 @@ module DPL
         @pipeline_definition ||= JSON.parse(File.read(pipeline_definition_file))
       end
 
+      def pipeline_tags
+        options[:pipeline_tags]
+      end
+
+      def pipeline_description
+        options[:pipeline_description]
+      end
+
       def datapipeline
         @datapipeline ||= Aws::DataPipeline::Client.new
       end
@@ -55,19 +63,30 @@ module DPL
       end
 
       def push_app
-        log "Deploying pipeline #{pipeline_name}"
-        log "Deploying pipeline definition @ #{pipeline_definition_file}"
+        log "Deploying pipeline #{pipeline_name} with pipeline definition @ #{pipeline_definition_file}"
+
         pipelines = datapipeline.list_pipelines.pipeline_id_list.select { |x| x.name == pipeline_name }
-        if pipelines.size == 0
-          error "Pipeline not found '#{pipeline_name}'."
-        end
 
         if pipelines.size > 1
           error "Pipelines found '#{pipeline_name}': #{pipelines}"
         end
 
+        if pipelines.size == 1
+          client.delete_pipeline({
+            pipeline_id: pipelines.first.id
+          })
+        end
+
+        response = datapipeline.create_pipeline({
+          name: pipeline_name,
+          unique_id: pipeline_name,
+          description: pipeline_description,
+          tags: pipeline_tags
+        })
+        pipeline_id = response.pipeline_id
+
         response = datapipeline.put_pipeline_definition({
-          pipeline_id: pipelines.first.id,
+          pipeline_id: pipeline_id,
           pipeline_objects: pipeline_objects,
           parameter_objects: parameter_objects,
           parameter_values: parameter_values
@@ -77,7 +96,6 @@ module DPL
           log "Failed to put pipeline definition:"
           log response[:validation_errors].inspect
           error "Deployment failed."
-
         else
           log "Deployment successful."
         end
@@ -99,7 +117,6 @@ module DPL
           current[:fields] = fields.flatten
           pipeline_objects.push current
         end
-        log "pipeline_objects : #{pipeline_objects}"
         pipeline_objects
       end
 
@@ -116,7 +133,6 @@ module DPL
           current[:attributes] = attributes.flatten
           parameter_objects.push current
         end
-        log "parameter_objects: #{parameter_objects}"
         parameter_objects
       end
 
@@ -126,7 +142,6 @@ module DPL
           parameter_values.push(convertParameterValue(key,value))
         end
         parameter_values.flatten!
-        log "parameter_values: #{parameter_values}"
         parameter_values
       end
 
