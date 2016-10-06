@@ -72,7 +72,7 @@ module DPL
         end
 
         if pipelines.size == 1
-          client.delete_pipeline({
+          datapipeline.delete_pipeline({
             pipeline_id: pipelines.first.id
           })
         end
