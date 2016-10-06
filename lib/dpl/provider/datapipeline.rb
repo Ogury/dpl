@@ -64,6 +64,7 @@ module DPL
 
       def push_app
         log "Deploying pipeline #{pipeline_name} with pipeline definition @ #{pipeline_definition_file}"
+        log "options: #{options}"
 
         pipelines = datapipeline.list_pipelines.pipeline_id_list.select { |x| x.name == pipeline_name }
 
@@ -72,11 +73,14 @@ module DPL
         end
 
         if pipelines.size == 1
+          log "Deleting pipeline #{pipelines.first.id}"
           datapipeline.delete_pipeline({
             pipeline_id: pipelines.first.id
           })
         end
 
+        log "Creating pipeline #{pipeline_name}"
+        log "with tags #{pipeline_tags}"
         response = datapipeline.create_pipeline({
           name: pipeline_name,
           unique_id: pipeline_name,
@@ -84,7 +88,9 @@ module DPL
           tags: pipeline_tags
         })
         pipeline_id = response.pipeline_id
+        log "Pipeline #{pipeline_id} created"
 
+        log "Updating pipeline #{pipeline_id}"
         response = datapipeline.put_pipeline_definition({
           pipeline_id: pipeline_id,
           pipeline_objects: pipeline_objects,
