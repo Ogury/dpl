@@ -65,7 +65,10 @@ module DPL
       def push_app
         log "Deploying pipeline #{pipeline_name} with pipeline definition @ #{pipeline_definition_file}"
 
-        pipelines = datapipeline.list_pipelines.pipeline_id_list.select { |x| x.name == pipeline_name }
+        list_pipelines = datapipeline.list_pipelines
+        log "pipeline list: #{list_pipelines.pipeline_id_list}"
+        
+        pipelines = list_pipelines.pipeline_id_list.select { |x| x.name == pipeline_name }
         
         log "pipeline list size: #{pipelines.size}"
 
