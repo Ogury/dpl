@@ -66,6 +66,8 @@ module DPL
         log "Deploying pipeline #{pipeline_name} with pipeline definition @ #{pipeline_definition_file}"
 
         pipelines = datapipeline.list_pipelines.pipeline_id_list.select { |x| x.name == pipeline_name }
+        
+        log "pipeline list size: #{pipelines.size}"
 
         if pipelines.size > 1
           error "Pipelines found '#{pipeline_name}': #{pipelines}"
