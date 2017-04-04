@@ -65,10 +65,19 @@ module DPL
       def push_app
         log "Deploying pipeline #{pipeline_name} with pipeline definition @ #{pipeline_definition_file}"
 
-        list_pipelines = datapipeline.list_pipelines
-        log "pipeline list: #{list_pipelines.pipeline_id_list}"
+        list_pipelines = []
+        options = {}
+        loop do
+          resp = datapipeline.list_pipelines(options)
+          list_pipelines.push(*resp.pipeline_id_list) if not resp.pipeline_id_list.empty?
+
+          break if not resp.has_more_results
+          options = { marker: resp.marker }
+        end
+
+        log "pipeline list: #{list_pipelines}"
         
-        pipelines = list_pipelines.pipeline_id_list.select { |x| x.name == pipeline_name }
+        pipelines = list_pipelines.select { |x| x.name == pipeline_name }
         
         log "pipeline list size: #{pipelines.size}"
 
