@@ -180,7 +180,7 @@ module DPL
       end
 
       def convertField(key, value)
-        field = { 'key': key }
+        field = :key => key
         if value.is_a?(Hash) && value.keys == ['ref']
           field[:ref_value] = value['ref']
         else
