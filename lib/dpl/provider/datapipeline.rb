@@ -5,7 +5,7 @@ module DPL
       """Implements AWS Datapipeline deployment
       """
 
-      requires 'aws-sdk'
+      requires 'aws-sdk', version: '< 3.0'
       requires 'json'
 
       DEFAULT_REGION = 'us-east-1'
