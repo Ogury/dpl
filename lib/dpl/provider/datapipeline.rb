@@ -1,12 +1,12 @@
-require 'aws-sdk'
-require 'json'
-
 module DPL
   class Provider
     class Datapipeline < Provider
       experimental 'AWS Datapipeline'
       """Implements AWS Datapipeline deployment
       """
+
+      requires 'aws-sdk', version: '< 3.0'
+      requires 'json'
 
       DEFAULT_REGION = 'us-east-1'
 
