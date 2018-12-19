@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary               = %q{deploy tool}
   s.description           = %q{deploy tool abstraction for clients}
   s.license               = 'MIT'
-  s.files                 = `git ls-files`.split("\n")
+  s.files                 = `git ls-files`.split("\n").reject { |f| f.include?('git') }
   s.test_files            = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables           = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_path          = 'lib'
