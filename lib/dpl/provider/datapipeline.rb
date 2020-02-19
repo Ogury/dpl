@@ -75,8 +75,6 @@ module DPL
           options = { marker: resp.marker }
         end
 
-        log "pipeline list: #{list_pipelines}"
-        
         pipelines = list_pipelines.select { |x| x.name == pipeline_name }
         
         log "pipeline list size: #{pipelines.size}"
